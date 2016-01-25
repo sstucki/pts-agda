@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
--- Experiments with the DOT calculus
+-- Experiments with Pure Type Systems (PTS)
 ------------------------------------------------------------------------
 
 -- Author: Sandro Stucki

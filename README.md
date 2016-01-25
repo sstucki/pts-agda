@@ -1,11 +1,11 @@
 Pure Type Systems (PTS)
 =======================
 
-This project contains a minimal formalization of Pure Type Systems
+This project contains a partial formalization of Pure Type Systems
 (PTS), written in [Agda](https://github.com/agda/agda).
 
 The code makes heavy use of the Agda standard library, which is freely
-available from [https://github.com/agda/agda-stdlib/].
+available [here](https://github.com/agda/agda-stdlib/).
 
 For an excellent introduction to pure type systems, see
 H. P. Barendregt's *Lambda Calculi with Types*, chapter 2 of the
