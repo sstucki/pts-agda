@@ -23,7 +23,6 @@ module README where
 open import Pts.Syntax
 
 -- Variants of β-reduction/equivalence and properties thereof.
-open import Pts.Reduction
 open import Pts.Reduction.Cbv
 open import Pts.Reduction.Full
 open import Pts.Reduction.Parallel
@@ -52,3 +51,6 @@ open import Data.Fin.Substitution.Typed
 -- Symmetric and equivalence closures of binary relations.
 open import Relation.Binary.SymmetricClosure
 open import Relation.Binary.EquivalenceClosure
+
+-- Support for generic reduction relations.
+open import Relation.Binary.Reduction

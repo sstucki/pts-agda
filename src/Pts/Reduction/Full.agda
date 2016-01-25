@@ -14,10 +14,10 @@ open import Relation.Binary
 import Relation.Binary.EquivalenceClosure as EqClos
 import Relation.Binary.PropositionalEquality as P
 import Relation.Binary.SymmetricClosure as SymClos
+open import Relation.Binary.Reduction
 import Function.Equivalence as Equiv
 
 open import Pts.Syntax
-open import Pts.Reduction
 open import Pts.Reduction.Parallel as Par hiding (reduction; _⋄*_; Π-inj)
 
 

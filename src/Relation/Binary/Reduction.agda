@@ -2,7 +2,7 @@
 -- Reduction relations for pure type systems (PTS)
 ------------------------------------------------------------------------
 
-module Pts.Reduction where
+module Relation.Binary.Reduction where
 
 open import Data.Fin using (Fin)
 open import Data.Fin.Substitution
@@ -15,8 +15,6 @@ open import Relation.Binary.EquivalenceClosure
 open import Relation.Binary.SymmetricClosure using (fwd)
 import Relation.Binary.PropositionalEquality as PropEq
 import Relation.Binary.EqReasoning as EqReasoning
-
-open import Pts.Syntax
 
 ----------------------------------------------------------------------
 -- Generic reduction and equivalence relations

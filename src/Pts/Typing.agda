@@ -314,7 +314,7 @@ module _ {pts} where
 
     wfWeakenOps : WfWeakenOps weakenOps
     wfWeakenOps = record
-      { weaken  = λ { a-wk (_ , b∈s) → (_ , E.weaken  a-wk b∈s) }
+      { weaken = λ { a-wk (_ , b∈s) → (_ , E.weaken a-wk b∈s) }
       }
 
     open WfWeakenOps wfWeakenOps public

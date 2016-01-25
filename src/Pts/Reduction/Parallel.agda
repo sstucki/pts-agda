@@ -14,12 +14,12 @@ open import Data.Nat using (ℕ; _+_)
 open import Data.Vec.All using (lookup₂)
 import Function as Fun
 open import Relation.Binary
-open import Relation.Binary.SymmetricClosure using (fwd; bwd)
 open import Relation.Binary.EquivalenceClosure using (EqClosure)
+open import Relation.Binary.SymmetricClosure using (fwd; bwd)
+open import Relation.Binary.Reduction
 import Relation.Binary.PropositionalEquality as P
 
 open import Pts.Syntax
-open import Pts.Reduction
 
 -- All remaining submodules are parametrized by a given set of sorts.
 module _ {Sort : Set} where

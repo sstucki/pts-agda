@@ -9,9 +9,9 @@ open import Data.Fin.Substitution.ExtraLemmas
 open import Data.Star using (map; gmap)
 import Relation.Binary.EquivalenceClosure as EqClos
 import Relation.Binary.PropositionalEquality as PropEq
+open import Relation.Binary.Reduction
 
 open import Pts.Syntax
-open import Pts.Reduction
 open import Pts.Reduction.Full as Full hiding (reduction)
 
 
