@@ -64,9 +64,9 @@ Typing Tp₁ Tm Tp₂ = ∀ {n} → Ctx Tp₁ n → Tm n → Tp₂ n → Set
 
 -- Abstract well-formedness.
 --
--- An abtract well-formedness relation _⊢_wf : Wf Tp₁ Tp₂ is a binary
--- relation which, in a given Tp₁-context, asserts the well-formedness
--- of Tp₂-types.
+-- An abtract well-formedness relation _⊢_wf : Wf Tp is a binary
+-- relation which, in a given Tp-context, asserts the well-formedness
+-- of Tp-types.
 Wf : (ℕ → Set) → Set₁
 Wf Tp = ∀ {n} → Ctx Tp n → Tp n → Set
 
@@ -78,7 +78,7 @@ module WellFormedContext {T} (_⊢_wf : Wf T) where
   infix  4 _wf
   infixr 5 _∷_
 
-  -- Typing contexts.
+  -- Well-formed typing contexts.
   data _wf : ∀ {n} → Ctx T n → Set where
     []  :                                              [] wf
     _∷_ : ∀ {n a} {Γ : Ctx T n} → Γ ⊢ a wf → Γ wf → a ∷ Γ wf
@@ -106,7 +106,7 @@ module WellFormedContext {T} (_⊢_wf : Wf T) where
     toAll []         = []
     toAll (a-wf ∷ Γ) = weaken a-wf a-wf ∷ gmap (weaken  a-wf) (toAll Γ)
 
-    -- Lookup the type of a variable in a context.
+    -- Lookup the well-formedness proof of a variable in a context.
     lookup : ∀ {n} {Γ : Ctx T n} → (x : Fin n) → Γ wf → Γ ⊢ (W.lookup x Γ) wf
     lookup x = All.lookup x ∘ toAll
 
@@ -236,7 +236,7 @@ record SimpleTyped {Tp Tm} (simple : Simple Tm)
     /-wk : ∀ {n} {a : Tp n} → a / S.wk ≡ C.weaken a
 
     -- Single-variable substitution is a left-inverse of weakening.
-    wk-sub-vanishes : ∀ {n b} (a : Tp n) → a / S.wk / S.sub b ≡ a
+    wk-sub-vanishes : ∀ {n t} (a : Tp n) → a / S.wk / S.sub t ≡ a
 
     -- Well-formedness of types implies well-formedness of contexts.
     wf-wf : ∀ {n} {Γ : Ctx Tp n} {a} → Γ ⊢ a wf → Γ wf
@@ -248,7 +248,7 @@ record SimpleTyped {Tp Tm} (simple : Simple Tm)
   -- Lifting.
   _↑_ : ∀ {m n} {Γ : Ctx Tp m} {Δ : Ctx Tp n} {σ} → Γ ⇒ Δ ⊢ σ →
         ∀ {a} → Δ ⊢ a / σ wf → a ∷ Γ ⇒ a / σ ∷ Δ ⊢ σ S.↑
-  (σ-wt , Δ-wf) ↑ a/σ-wf = var zero (a/σ-wf ∷ Δ-wf ) /∷ (σ-wt , Δ-wf)
+  (σ-wt , Δ-wf) ↑ a/σ-wf = var zero (a/σ-wf ∷ Δ-wf) /∷ (σ-wt , Δ-wf)
 
   -- The identity substitution.
   id : ∀ {n} {Γ : Ctx Tp n} → Γ wf → Γ ⇒ Γ ⊢ S.id
@@ -329,7 +329,7 @@ module VarTyping {Tp} (weakenOps : WeakenOps Tp) (_⊢_wf : Wf Tp) where
 
   infix 4 _⊢Var_∈_
 
-  -- Abstract variable typings.
+  -- Abstract reflexive variable typings.
   data _⊢Var_∈_ {n} (Γ : Ctx Tp n) : Fin n → Tp n → Set where
     var : ∀ x → Γ wf → Γ ⊢Var x ∈ lookup x Γ
 
@@ -377,9 +377,9 @@ record TypedVarSubst {Tp} (_⊢_wf : Wf Tp) : Set where
   -- Extensions of renamings.
   extensionTyped : ExtensionTyped extension typedSub
   extensionTyped = record
-    { weaken          = weaken
-    ; weaken-/        = weaken-/
-    ; wt-wf           = wt-wf
+    { weaken   = weaken
+    ; weaken-/ = weaken-/
+    ; wt-wf    = wt-wf
     }
     where
       open Applicative.Morphism using (op-<$>)

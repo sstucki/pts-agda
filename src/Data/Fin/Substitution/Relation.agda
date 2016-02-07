@@ -163,8 +163,8 @@ record RelLift {T₁ T₂ T₁′ T₂′} (_∼_ : TermRel T₁ T₂) (_∼′_
 
   open RelSimple simple public
 
--- Variable substitutions (renamings) lifted to relations.
-module VarRelSubst where
+-- Variable substitutions (renamings) lifted to equality.
+module VarEqSubst where
   private module V = VarSubst
 
   infix 4 _⟨≡⟩_
@@ -192,7 +192,7 @@ record TermRelSubst {T₁ T₂ : ℕ → Set} (_∼_ : TermRel T₁ T₂)
   private
     module S₁ = TermSubst ts₁
     module S₂ = TermSubst ts₂
-    module V  = VarRelSubst
+    module V  = VarEqSubst
 
   field
     var : ∀ {n} (x : Fin n) → S₁.var x ∼ S₂.var x

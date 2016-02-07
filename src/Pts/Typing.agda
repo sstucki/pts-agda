@@ -152,8 +152,7 @@ module _ {pts} where
   LiftToTermTyped l _⊢T_∈_ = LiftTyped l typedSub _⊢_∈_
     where open TermTypedSub l _⊢T_∈_ using (typedSub)
 
-  -- Application of well-typed substitutions to types, paths and
-  -- subtyping derivations.
+  -- Application of well-typed substitutions to terms.
   record TypedSubstApp {T} l {_⊢T_∈_ : TermTyping T}
                        (lt : LiftToTermTyped l _⊢T_∈_) : Set where
     open LiftTyped lt
@@ -204,7 +203,7 @@ module _ {pts} where
       }
     open TypedVarSubst typedVarSubst public
 
-    -- Liftings from Variables to Paths.
+    -- Liftings from variables to typed terms.
     liftTyped : LiftTyped varLift typedSub _⊢_∈_
     liftTyped = record
       { simpleTyped  = simpleTyped
@@ -243,7 +242,7 @@ module _ {pts} where
              (c ∷ Γ) ⊢ (U.weaken a) ∈ (U.weaken b)
     weaken a∈b c∈s = a∈b /Var V.wk (_ , c∈s)
 
-    -- Extensions of path substitutions.
+    -- Extensions of typed term substitutions.
     extensionTyped : ExtensionTyped extension typedSub
     extensionTyped = record
       { weaken   = λ { (_ , c∈s) a∈b → weaken a∈b c∈s }
@@ -251,7 +250,7 @@ module _ {pts} where
       ; wt-wf    = wt-wf
       }
 
-    -- Simple typed path substitutions.
+    -- Simple typed term substitutions.
     simpleTyped : SimpleTyped simple typedSub
     simpleTyped = record
       { extensionTyped  = extensionTyped
@@ -262,7 +261,7 @@ module _ {pts} where
       ; wf-wf           = wf-wf
       }
 
-    -- Liftings from Variables to Paths.
+    -- Liftings from terms to terms.
     liftTyped : LiftTyped termLift typedSub _⊢_∈_
     liftTyped = record
       { simpleTyped  = simpleTyped

@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
--- Reduction relations for pure type systems (PTS)
+-- Generic support for reduction relations.
 ------------------------------------------------------------------------
 
 module Relation.Binary.Reduction where

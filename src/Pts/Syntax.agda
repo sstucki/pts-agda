@@ -20,7 +20,7 @@ open PropEq.≡-Reasoning
 module _ (Sort : Set) where
 
   ----------------------------------------------------------------------
-  -- Abstract syntax of terms and values
+  -- Abstract syntax of terms
 
   module Syntax where
 
@@ -32,7 +32,7 @@ module _ (Sort : Set) where
       sort : (s : Sort)                      → Term n  -- sort
       Π    : (a : Term n) (b : Term (1 + n)) → Term n  -- dependent product
       ƛ    : (a : Term n) (b : Term (1 + n)) → Term n  -- abstraction
-      _·_  : (a : Term n) (b : Term n)       → Term n  -- application
+      _·_  : (a b : Term n)                  → Term n  -- application
 
   open Syntax
 

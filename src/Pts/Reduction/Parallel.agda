@@ -162,7 +162,7 @@ module _ {Sort : Set} where
     open P using (_≡_; refl)
     private
       module S = TermSubst termSubst
-      module V = VarRelSubst
+      module V = VarEqSubst
 
     varLift : RelLift _≡_ _⇛_ S.varLift S.varLift
     varLift = record { simple = V.simple; lift = lift }
