@@ -8,7 +8,8 @@ open import Data.Fin using (Fin; zero; suc)
 open import Data.Fin.Substitution
 open import Data.Fin.Substitution.ExtraLemmas
 open import Data.Nat using (ℕ; zero; suc)
-open import Data.Vec.All using (All₂; []; _∷_; gmap₂; lookup₂)
+open import Data.Vec.All using (All₂; []; _∷_; lookup₂)
+open import Data.Vec.All.Properties using (gmap₂)
 import Function as Fun
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 

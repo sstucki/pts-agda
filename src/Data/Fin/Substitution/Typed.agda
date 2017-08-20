@@ -13,7 +13,9 @@ open import Data.Nat using (ℕ; zero; suc; _+_)
 open import Data.Unit using (⊤; tt)
 open import Data.Vec as Vec using (Vec; []; _∷_; map)
 open import Data.Vec.All as All
-  using (All; All₂; []; _∷_; map₂; gmap₂; gmap₂₁; gmap₂₂)
+  using (All; All₂; []; _∷_; map₂)
+open import Data.Vec.All.Properties
+  using (gmap; gmap₂; gmap₂₁; gmap₂₂)
 open import Data.Vec.Properties using (lookup-morphism)
 open import Function as Fun using (_∘_; flip)
 open import Relation.Binary.PropositionalEquality as PropEq hiding (trans)
@@ -102,7 +104,7 @@ module WellFormedContext {T} (_⊢_wf : Wf T) where
     -- Convert a well-formed context to its All representation.
     toAll : ∀ {n} {Γ : Ctx T n} → Γ wf → All (λ a → Γ ⊢ a wf) (W.toVec Γ)
     toAll []         = []
-    toAll (a-wf ∷ Γ) = weaken a-wf a-wf ∷ All.gmap (weaken  a-wf) (toAll Γ)
+    toAll (a-wf ∷ Γ) = weaken a-wf a-wf ∷ gmap (weaken  a-wf) (toAll Γ)
 
     -- Lookup the type of a variable in a context.
     lookup : ∀ {n} {Γ : Ctx T n} → (x : Fin n) → Γ wf → Γ ⊢ (W.lookup x Γ) wf
