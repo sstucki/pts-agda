@@ -136,7 +136,7 @@ module _ {Sort : Set} where
 
     -- T₂-substitutions commute.
     field /₂-sub-↑ : ∀ {m n b} {σ : Sub T₂ m n} a →
-                     (a [ b ]) /₂ σ ≡ (a /₂ σ ↑₂) [ b /₂ σ ]
+                     (a [ b ]) /₂ σ ≡ (a /₂ (σ ↑₂)) [ b /₂ σ ]
 
     _/_ : ∀ {m n} {σ₁ : Sub T₁ m n} {σ₂ : Sub T₂ m n} →
           ∀ a → σ₁ ⟨ R ⟩ σ₂ → a /₁ σ₁ ⇛ a /₂ σ₂
