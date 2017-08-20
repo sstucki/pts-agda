@@ -92,7 +92,7 @@ module WellFormedContext {T} (_⊢_wf : Wf T) where
   -- Operations on well-formed contexts that require weakening of
   -- well-formedness judgments.
   record WfWeakenOps (weakenOps : WeakenOps T) : Set₁ where
-    private module W = WeakenOps T weakenOps
+    private module W = WeakenOps weakenOps
 
     field
       -- Weakening of well-formedness judgments.
@@ -156,7 +156,7 @@ record TypedSub (Tp₁ Tp₂ Tm : ℕ → Set) : Set₁ where
     weakenOps : WeakenOps Tp₁
 
   open Application       application       public using (_/_)
-  open WeakenOps         Tp₁ weakenOps            using (toVec)
+  open WeakenOps         weakenOps                using (toVec)
   open WellFormedContext _⊢_wf             public
 
   infix  4 _⇒_⊢_
@@ -182,7 +182,7 @@ record ExtensionTyped {Tp₁ Tp₂ Tm} (extension : Extension Tm)
   open TypedSub typedSub
   private
     module E  = Extension extension
-    module C  = WeakenOps Tp₁ weakenOps
+    module C  = WeakenOps weakenOps
 
   field
 
@@ -219,7 +219,7 @@ record SimpleTyped {Tp Tm} (simple : Simple Tm)
   private
     module S  = SimpleExt simple
     module L₀ = Lemmas₀   (record { simple = simple })
-    module C  = WeakenOps Tp weakenOps
+    module C  = WeakenOps weakenOps
 
   field
     extensionTyped : ExtensionTyped (record { weaken = S.weaken }) typedSub
@@ -322,7 +322,7 @@ record LiftTyped {Tp Tm₁ Tm₂} (l : Lift Tm₁ Tm₂)
 
 -- Abstract variable typings.
 module VarTyping {Tp} (weakenOps : WeakenOps Tp) (_⊢_wf : Wf Tp) where
-  open WeakenOps Tp weakenOps
+  open WeakenOps weakenOps
   open WellFormedContext _⊢_wf
 
   infix 4 _⊢Var_∈_
@@ -352,7 +352,7 @@ record TypedVarSubst {Tp} (_⊢_wf : Wf Tp) : Set where
 
   open Application application       using (_/_)
   open Lemmas₄     VarLemmas.lemmas₄ using (id; wk; _⊙_)
-  private module C = WeakenOps Tp weakenOps
+  private module C = WeakenOps weakenOps
 
   field
     /-wk        : ∀ {n} {a : Tp n} → a / wk ≡ C.weaken a

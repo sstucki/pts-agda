@@ -201,7 +201,7 @@ module _ {Sort : Set} where
       }
 
     open LiftTermRel Term Term public using (_⟨_⟩_)
-    open RelSubst _⇛_ subst public hiding (var; simple; _/_)
+    open RelSubst subst public hiding (var; simple; _/_)
 
     infix 10 _[⇛_]
 

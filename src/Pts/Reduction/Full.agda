@@ -84,7 +84,7 @@ module _ {Sort : Set} where
     redSubstApp : RedSubstApp reduction (record { _/_ = _/_ })
     redSubstApp = record { _/→1_ = _/→β_ }
 
-    open RedSubstApp reduction redSubstApp public
+    open RedSubstApp redSubstApp public
       hiding (_/→1_) renaming (_/→*_ to _/→β*_; _/↔_ to _/≡β_)
 
   -- Term substitutions in reductions/equivalences.

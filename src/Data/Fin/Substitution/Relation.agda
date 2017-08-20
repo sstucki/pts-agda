@@ -160,7 +160,7 @@ record RelLift {T₁ T₂ T₁′ T₂′} (_∼_ : TermRel T₁ T₂) (_∼′_
     simple : RelSimple _∼_ L₁.simple L₂.simple
     lift   : ∀ {n} {t₁ : T₁ n} {t₂} → t₁ ∼ t₂ → L₁.lift t₁ ∼′ L₂.lift t₂
 
-  open RelSimple _∼_ simple public
+  open RelSimple simple public
 
 -- Variable substitutions (renamings) lifted to relations.
 module VarRelSubst where
@@ -183,7 +183,7 @@ module VarRelSubst where
             x₁ ≡ x₂ → σ₁ ⟨≡⟩ σ₂ → x₁ V./ σ₁ ≡ x₂ V./ σ₂
       _/_ {x₁ = x} refl σ₁≡σ₂ = lookup₂ x σ₁≡σ₂
 
-  open RelSubst _≡_ subst public
+  open RelSubst subst public
 
 -- "Term" substitutions lifted to relations.
 record TermRelSubst {T₁ T₂ : ℕ → Set} (_∼_ : TermRel T₁ T₂)
@@ -239,4 +239,4 @@ record TermRelSubst {T₁ T₂ : ℕ → Set} (_∼_ : TermRel T₁ T₂)
     }
 
   open LiftTermRel T₁ T₂  public using (_⟨_⟩_)
-  open RelSubst _∼_ subst public hiding (var; simple)
+  open RelSubst subst public hiding (var; simple)
