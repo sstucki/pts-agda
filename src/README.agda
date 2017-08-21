@@ -37,10 +37,6 @@ open import Pts.Typing.Progress
 ------------------------------------------------------------------------
 -- Modules containing generic functionality
 
--- An 'forall' predicate for vectors (analogous to the Data.List.All
--- predicate for lists from the Agda standard library).
-open import Data.Vec.All
-
 -- Extra lemmas that are derivable in the substitution framework of
 -- the Agda standard library, as well as support for substitutions
 -- lifted to relations and typed substitutions.

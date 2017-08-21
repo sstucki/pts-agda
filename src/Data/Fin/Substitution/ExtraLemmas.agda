@@ -56,13 +56,12 @@ module ExtLemmas₀ {T} (lemmas₀ : Lemmas₀ T) where
     ≡⟨ op-<$> (lookup-morphism x) weaken _ ⟩
       weaken (lookup x (map weaken ρ ↑⋆ k))
     ≡⟨ cong weaken (lookup-map-weaken-↑⋆ k x) ⟩
-      weaken (lookup (lift k suc x) ((t /∷ ρ) ↑⋆ k))
-    ≡⟨ sym $ op-<$> (lookup-morphism (lift k suc x)) weaken _ ⟩
-      lookup (lift k suc x) (map weaken ((t /∷ ρ) ↑⋆ k))
+      weaken (lookup (Fin.lift k suc x) ((t /∷ ρ) ↑⋆ k))
+    ≡⟨ sym $ op-<$> (lookup-morphism (Fin.lift k suc x)) weaken _ ⟩
+      lookup (Fin.lift k suc x) (map weaken ((t /∷ ρ) ↑⋆ k))
     ∎
     where
       open Applicative.Morphism
-      open Fin using (lift)
 
 -- A generalized version of Data.Fin.Lemmas.Lemmas₄
 --
