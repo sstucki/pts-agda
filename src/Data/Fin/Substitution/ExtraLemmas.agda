@@ -4,7 +4,6 @@
 
 module Data.Fin.Substitution.ExtraLemmas where
 
-import Category.Applicative.Indexed as Applicative
 open import Data.Fin as Fin using (Fin; zero; suc)
 open import Data.Fin.Substitution
 open import Data.Fin.Substitution.Lemmas
@@ -12,7 +11,7 @@ open import Data.Nat using (ℕ; zero; suc; _+_)
 open import Data.Star using (Star; ε; _◅_; _▻_)
 open import Data.Vec using (Vec; _∷_; lookup; map)
 open import Data.Vec.All hiding (lookup; map)
-open import Data.Vec.Properties using (lookup-morphism; map-cong; map-∘)
+open import Data.Vec.Properties using (lookup-map; map-cong; map-∘)
 open import Function using (_∘_; _$_; flip)
 open import Relation.Binary.PropositionalEquality as PropEq hiding (subst)
 open PropEq.≡-Reasoning
@@ -53,15 +52,13 @@ module ExtLemmas₀ {T} (lemmas₀ : Lemmas₀ T) where
   lookup-map-weaken-↑⋆ (suc k) zero            = refl
   lookup-map-weaken-↑⋆ (suc k) (suc x) {ρ} {t} = begin
       lookup x (map weaken (map weaken ρ ↑⋆ k))
-    ≡⟨ op-<$> (lookup-morphism x) weaken _ ⟩
+    ≡⟨ lookup-map x weaken _ ⟩
       weaken (lookup x (map weaken ρ ↑⋆ k))
     ≡⟨ cong weaken (lookup-map-weaken-↑⋆ k x) ⟩
       weaken (lookup (Fin.lift k suc x) ((t /∷ ρ) ↑⋆ k))
-    ≡⟨ sym $ op-<$> (lookup-morphism (Fin.lift k suc x)) weaken _ ⟩
+    ≡⟨ sym (lookup-map (Fin.lift k suc x) weaken _) ⟩
       lookup (Fin.lift k suc x) (map weaken ((t /∷ ρ) ↑⋆ k))
     ∎
-    where
-      open Applicative.Morphism
 
 -- A generalized version of Data.Fin.Lemmas.Lemmas₄
 --
@@ -204,7 +201,6 @@ record LiftAppLemmas (T₁ T₂ T₃ : ℕ → Set) : Set where
 
 -- Lemmas relating T₂ and T₃ substitutions in T₁.
 record LiftSubLemmas (T₁ T₂ T₃ : ℕ → Set) : Set where
-  open Applicative.Morphism using (op-<$>)
   field
     application₁₂ : Application   T₁ T₂
     liftAppLemmas : LiftAppLemmas T₁ T₂ T₃
@@ -294,7 +290,7 @@ record LiftSubLemmas (T₁ T₂ T₃ : ℕ → Set) : Set where
       lift (L₃.var x L₃./ σ ↑⋆ k)
     ≡⟨ cong lift L₃.var-/ ⟩
       lift (lookup x (σ ↑⋆ k))
-    ≡⟨ sym (op-<$> (lookup-morphism x) _ _) ⟩
+    ≡⟨ sym (lookup-map x _ _) ⟩
       lookup x (liftSub (σ ↑⋆ k))
     ≡⟨ sym L₂.var-/ ⟩
       L₂.var x L₂./ liftSub (σ ↑⋆ k)

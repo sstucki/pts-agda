@@ -4,7 +4,6 @@
 
 module Data.Fin.Substitution.Typed where
 
-import Category.Applicative.Indexed as Applicative
 open import Data.Fin using (Fin; zero; suc)
 open import Data.Fin.Substitution
 open import Data.Fin.Substitution.Lemmas
@@ -16,7 +15,7 @@ open import Data.Vec.All as All
   using (All; All₂; []; _∷_; map₂)
 open import Data.Vec.All.Properties
   using (gmap; gmap₂; gmap₂₁; gmap₂₂)
-open import Data.Vec.Properties using (lookup-morphism)
+open import Data.Vec.Properties using (lookup-map)
 open import Function as Fun using (_∘_; flip)
 open import Relation.Binary.PropositionalEquality as PropEq hiding (trans)
 open PropEq.≡-Reasoning
@@ -382,12 +381,10 @@ record TypedVarSubst {Tp} (_⊢_wf : Wf Tp) : Set where
     ; wt-wf    = wt-wf
     }
     where
-      open Applicative.Morphism using (op-<$>)
-
       weaken : ∀ {n} {Γ : Ctx Tp n} {x a b} → Γ ⊢ a wf → Γ ⊢Var x ∈ b →
                a ∷ Γ ⊢Var suc x ∈ C.weaken b
       weaken a-wf (var x Γ-wf) =
-        subst (_⊢Var_∈_ _ _) (op-<$> (lookup-morphism x) _ _)
+        subst (_⊢Var_∈_ _ _) (lookup-map x _ _)
               (var (suc x) (a-wf ∷ Γ-wf))
 
       weaken-/ : ∀ {m n} {σ : Sub Fin m n} {t} a →
