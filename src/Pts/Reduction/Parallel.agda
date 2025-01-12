@@ -8,16 +8,16 @@ open import Data.Fin using (Fin)
 open import Data.Fin.Substitution
 open import Data.Fin.Substitution.ExtraLemmas
 open import Data.Fin.Substitution.Relation
-open import Data.Star using (Star; ε; _◅_; _◅◅_)
+open import Relation.Binary.Construct.Closure.ReflexiveTransitive using (Star; ε; _◅_; _◅◅_)
 open import Data.Product using (_,_; ∃; _×_)
 open import Data.Nat using (ℕ; _+_)
-open import Data.Vec.All using (lookup₂)
 import Function as Fun
 open import Relation.Binary
-open import Relation.Binary.EquivalenceClosure using (EqClosure)
-open import Relation.Binary.SymmetricClosure using (fwd; bwd)
+open import Relation.Binary.Construct.Closure.Equivalence using (EqClosure)
+open import Relation.Binary.Construct.Closure.Symmetric using (fwd; bwd)
 open import Relation.Binary.Reduction
 import Relation.Binary.PropositionalEquality as P
+open import Data.Vec.Relation.Binary.Pointwise.Inductive using (lookup)
 
 open import Pts.Syntax
 
@@ -140,7 +140,7 @@ module _ {Sort : Set} where
 
     _/_ : ∀ {m n} {σ₁ : Sub T₁ m n} {σ₂ : Sub T₂ m n} →
           ∀ a → σ₁ ⟨ R ⟩ σ₂ → a /₁ σ₁ ⇛ a /₂ σ₂
-    var x   / σ₁∼σ₂ = lift (lookup₂ x σ₁∼σ₂)
+    var x   / σ₁∼σ₂ = lift (lookup σ₁∼σ₂ x)
     sort s  / σ₁∼σ₂ = refl
     Π a b   / σ₁∼σ₂ = Π (a / σ₁∼σ₂) (b / σ₁∼σ₂ ↑)
     ƛ a b   / σ₁∼σ₂ = ƛ (a / σ₁∼σ₂) (b / σ₁∼σ₂ ↑)

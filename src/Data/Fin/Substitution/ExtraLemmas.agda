@@ -8,9 +8,9 @@ open import Data.Fin as Fin using (Fin; zero; suc)
 open import Data.Fin.Substitution
 open import Data.Fin.Substitution.Lemmas
 open import Data.Nat using (ℕ; zero; suc; _+_)
-open import Data.Star using (Star; ε; _◅_; _▻_)
+open import Relation.Binary.Construct.Closure.ReflexiveTransitive using (Star; ε; _◅_; _▻_)
 open import Data.Vec using (Vec; _∷_; lookup; map)
-open import Data.Vec.All hiding (lookup; map)
+open import Data.Vec.Relation.Unary.All hiding (lookup; map)
 open import Data.Vec.Properties using (lookup-map; map-cong; map-∘)
 open import Function using (_∘_; _$_; flip)
 open import Relation.Binary.PropositionalEquality as PropEq hiding (subst)
@@ -46,18 +46,18 @@ module ExtLemmas₀ {T} (lemmas₀ : Lemmas₀ T) where
 
   -- A generalized variant of Lemmas₀.lookup-map-weaken-↑⋆.
   lookup-map-weaken-↑⋆ : ∀ {m n} k x {ρ : Sub T m n} {t} →
-                         lookup x (map weaken ρ ↑⋆ k) ≡
-                         lookup (Fin.lift k suc x) ((t /∷ ρ) ↑⋆ k)
+                         lookup (map weaken ρ ↑⋆ k) x ≡
+                         lookup ((t /∷ ρ) ↑⋆ k) (Fin.lift k suc x)
   lookup-map-weaken-↑⋆ zero    x               = refl
   lookup-map-weaken-↑⋆ (suc k) zero            = refl
   lookup-map-weaken-↑⋆ (suc k) (suc x) {ρ} {t} = begin
-      lookup x (map weaken (map weaken ρ ↑⋆ k))
-    ≡⟨ lookup-map x weaken _ ⟩
-      weaken (lookup x (map weaken ρ ↑⋆ k))
+      lookup (map weaken (map weaken ρ ↑⋆ k)) x
+    ≡⟨ lookup-map x weaken (map weaken ρ ↑⋆ k) ⟩
+      weaken (lookup (map weaken ρ ↑⋆ k) x)
     ≡⟨ cong weaken (lookup-map-weaken-↑⋆ k x) ⟩
-      weaken (lookup (Fin.lift k suc x) ((t /∷ ρ) ↑⋆ k))
-    ≡⟨ sym (lookup-map (Fin.lift k suc x) weaken _) ⟩
-      lookup (Fin.lift k suc x) (map weaken ((t /∷ ρ) ↑⋆ k))
+      weaken (lookup ((t /∷ ρ) ↑⋆ k) (Fin.lift k suc x))
+    ≡⟨ sym (lookup-map (Fin.lift k suc x) weaken ((t /∷ ρ) ↑⋆ k)) ⟩
+      lookup (map weaken ((t /∷ ρ) ↑⋆ k)) (Fin.lift k suc x)
     ∎
 
 -- A generalized version of Data.Fin.Lemmas.Lemmas₄
@@ -81,11 +81,11 @@ module ExtLemmas₄ {T} (lemmas₄ : Lemmas₄ T) where
       ρ ↑⋆ k ⊙ wk ↑⋆ k          ∎)
       where
       lemma = extensionality λ x → begin
-          lookup x (wk ↑⋆ k ⊙ (t /∷ ρ) ↑⋆ k)
+          lookup (wk ↑⋆ k ⊙ (t /∷ ρ) ↑⋆ k) x
         ≡⟨ lookup-wk-↑⋆-⊙ k ⟩
-          lookup (Fin.lift k suc x) ((t /∷ ρ) ↑⋆ k)
+          lookup ((t /∷ ρ) ↑⋆ k) (Fin.lift k suc x)
         ≡⟨ sym (lookup-map-weaken-↑⋆ k x) ⟩
-          lookup x (map weaken ρ ↑⋆ k)
+          lookup (map weaken ρ ↑⋆ k) x
         ∎
 
   ⊙-wk : ∀ {m n} {ρ : Sub T m n} {t} → ρ ⊙ wk ≡ wk ⊙ (t /∷ ρ)
@@ -107,7 +107,7 @@ module ExtLemmas₄ {T} (lemmas₄ : Lemmas₄ T) where
 -- A generalize version of Data.Fin.Lemmas.AppLemmas
 --
 -- FIXME: this should go into Data.Fin.Substitution.Lemmas.
-module ExtAppLemmas {T₁ T₂} (appLemmas : AppLemmas T₁ T₂) where
+module ExtAppLemmas {ℓ₁ T₁ T₂} (appLemmas : AppLemmas {ℓ₁} T₁ T₂) where
 
   open AppLemmas appLemmas public hiding (wk-commutes)
   open SimpleExt simple           using (_/∷_)
@@ -147,27 +147,27 @@ record LiftAppLemmas (T₁ T₂ T₃ : ℕ → Set) : Set where
        ∀ k t → t        A₁./✶ σs₁ L₃.↑✶ k ≡ t      A₁./✶ σs₂ L₃.↑✶ k
 
   lift-lookup-⊙ : ∀ {m n k} x {σ₁ : Sub T₃ m n} {σ₂ : Sub T₃ n k} →
-                  lift (lookup x (σ₁ L₃.⊙ σ₂)) ≡ lift (lookup x σ₁) A₂./ σ₂
+                  lift (lookup (σ₁ L₃.⊙ σ₂) x) ≡ lift (lookup σ₁ x) A₂./ σ₂
   lift-lookup-⊙ x {σ₁} {σ₂} = begin
-    lift (lookup x (σ₁ L₃.⊙ σ₂))   ≡⟨ cong lift (L₃.lookup-⊙ x) ⟩
-    lift (lookup x σ₁ L₃./ σ₂)     ≡⟨ lift-/ _ ⟩
-    lift (lookup x σ₁) A₂./ σ₂     ∎
+    lift (lookup (σ₁ L₃.⊙ σ₂) x)   ≡⟨ cong lift (L₃.lookup-⊙ x {σ₁}) ⟩
+    lift (lookup σ₁ x L₃./ σ₂)     ≡⟨ lift-/ _ ⟩
+    lift (lookup σ₁ x) A₂./ σ₂     ∎
 
   lift-lookup-⨀ : ∀ {m n} x (σs : Subs T₃ m n) →
-                  lift (lookup x (L₃.⨀ σs)) ≡ L₂.var x A₂./✶ σs
+                  lift (lookup (L₃.⨀ σs) x) ≡ L₂.var x A₂./✶ σs
   lift-lookup-⨀ x ε = begin
-    lift (lookup x L₃.id)    ≡⟨ cong lift (L₃.lookup-id x) ⟩
+    lift (lookup L₃.id x)    ≡⟨ cong lift (L₃.lookup-id x) ⟩
     lift (L₃.var x)          ≡⟨ lift-var x ⟩
     L₂.var x                 ∎
   lift-lookup-⨀ x (σ ◅ ε) = begin
-    lift (lookup x σ)        ≡⟨ cong lift (sym L₃.var-/) ⟩
+    lift (lookup σ x)        ≡⟨ cong lift (sym L₃.var-/) ⟩
     lift (L₃.var x L₃./ σ)   ≡⟨ lift-/ _ ⟩
     lift (L₃.var x) A₂./ σ   ≡⟨ cong₂ A₂._/_ (lift-var x) refl ⟩
     L₂.var x A₂./ σ          ∎
   lift-lookup-⨀ x (σ ◅ (σ′ ◅ σs′)) = begin
-      lift (lookup x (L₃.⨀ σs L₃.⊙ σ))
-    ≡⟨ lift-lookup-⊙ x ⟩
-      lift (lookup x (L₃.⨀ σs)) A₂./ σ
+      lift (lookup (L₃.⨀ σs L₃.⊙ σ) x)
+    ≡⟨ lift-lookup-⊙ x {L₃.⨀ σs}⟩
+      lift (lookup (L₃.⨀ σs) x) A₂./ σ
     ≡⟨ cong₂ A₂._/_ (lift-lookup-⨀ x (σ′ ◅ σs′)) refl ⟩
       L₂.var x A₂./✶ σs A₂./ σ
     ∎
@@ -181,9 +181,9 @@ record LiftAppLemmas (T₁ T₂ T₃ : ℕ → Set) : Set where
   /✶-↑✶′ σs₁ σs₂ hyp = /✶-↑✶ σs₁ σs₂ (λ k x → begin
       L₂.var x A₂./✶ σs₁ L₃.↑✶ k
     ≡⟨ sym (lift-lookup-⨀ x (σs₁ L₃.↑✶ k)) ⟩
-      lift (lookup x (L₃.⨀ (σs₁ L₃.↑✶ k)))
-    ≡⟨ cong (lift ∘ lookup x) (hyp k) ⟩
-      lift (lookup x (L₃.⨀ (σs₂ L₃.↑✶ k)))
+      lift (lookup (L₃.⨀ (σs₁ L₃.↑✶ k)) x)
+    ≡⟨ cong (\v -> lift (lookup v x)) (hyp k) ⟩
+      lift (lookup (L₃.⨀ (σs₂ L₃.↑✶ k)) x)
     ≡⟨ lift-lookup-⨀ x (σs₂ L₃.↑✶ k) ⟩
       L₂.var x A₂./✶ σs₂ L₃.↑✶ k
     ∎)
@@ -196,7 +196,7 @@ record LiftAppLemmas (T₁ T₂ T₃ : ℕ → Set) : Set where
     ; id-vanishes = /✶-↑✶′ (ε ▻ L₃.id) ε L₃.id-↑⋆ 0
     ; /-⊙         = /✶-↑✶′ (ε ▻ _ L₃.⊙ _) (ε ▻ _ ▻ _) L₃.↑⋆-distrib 0
     }
-  open ExtAppLemmas appLemmas public
+  open ExtAppLemmas {_} {T₁} {T₃} appLemmas public
     hiding (application; lemmas₂; lemmas₃; var; weaken; subst; simple)
 
 -- Lemmas relating T₂ and T₃ substitutions in T₁.
@@ -262,7 +262,7 @@ record LiftSubLemmas (T₁ T₂ T₃ : ℕ → Set) : Set where
     L₂.id ∎
 
   -- Weakening is equivalent up to lifting.
-  liftSub-wk⋆ : ∀ k {n} → liftSub (L₃.wk⋆ k {n}) ≡ L₂.wk⋆ k {n}
+  liftSub-wk⋆ : ∀ k {n} → liftSub (L₃.wk⋆ {n} k) ≡ L₂.wk⋆ {n} k
   liftSub-wk⋆ zero    = liftSub-id
   liftSub-wk⋆ (suc k) = begin
     liftSub (map L₃.weaken (L₃.wk⋆ k))   ≡⟨ sym (map-∘ _ _ _) ⟩
@@ -273,7 +273,7 @@ record LiftSubLemmas (T₁ T₂ T₃ : ℕ → Set) : Set where
 
   -- Weakening is equivalent up to lifting.
   liftSub-wk : ∀ {n} → liftSub (L₃.wk {n}) ≡ L₂.wk {n}
-  liftSub-wk = liftSub-wk⋆ 1
+  liftSub-wk {n} = liftSub-wk⋆ 1 {n}
 
   -- Single variable substitution is equivalent up to lifting.
   liftSub-sub : ∀ {n} (t : T₃ n) → liftSub (L₃.sub t) ≡ L₂.sub (lift t)
@@ -289,9 +289,9 @@ record LiftSubLemmas (T₁ T₂ T₃ : ℕ → Set) : Set where
     ≡⟨ sym (lift-/ _) ⟩
       lift (L₃.var x L₃./ σ ↑⋆ k)
     ≡⟨ cong lift L₃.var-/ ⟩
-      lift (lookup x (σ ↑⋆ k))
-    ≡⟨ sym (lookup-map x _ _) ⟩
-      lookup x (liftSub (σ ↑⋆ k))
+      lift (lookup (σ ↑⋆ k) x)
+    ≡⟨ sym (lookup-map x lift (σ ↑⋆ k)) ⟩
+      lookup (liftSub (σ ↑⋆ k)) x
     ≡⟨ sym L₂.var-/ ⟩
       L₂.var x L₂./ liftSub (σ ↑⋆ k)
     ≡⟨ cong (L₂._/_ (L₂.var x)) (sym (liftSub-↑⋆ σ k)) ⟩
@@ -429,7 +429,7 @@ record TermLikeLemmas (T₁ T₂ : ℕ → Set) : Set₁ where
 
   -- A version of wk-sub-vanishes for T₁s.
   weaken-sub : ∀ {n t′} → (t : T₁ n) → weaken t / sub t′ ≡ t
-  weaken-sub t = begin
-    weaken t / sub _   ≡⟨ cong₂ _/_ /-wk refl ⟩
-    t / wk / sub _     ≡⟨ wk-sub-vanishes t ⟩
+  weaken-sub {t′ = t′} t = begin
+    weaken t / sub t′  ≡⟨ cong₂ _/_ /-wk refl ⟩
+    t / wk / sub t′    ≡⟨  wk-sub-vanishes {t′ = t′} t  ⟩
     t                  ∎

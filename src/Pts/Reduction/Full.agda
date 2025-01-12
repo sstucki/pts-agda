@@ -6,16 +6,16 @@ module Pts.Reduction.Full where
 
 open import Data.Fin.Substitution
 open import Data.Fin.Substitution.ExtraLemmas
-open import Data.Star using (ε; _◅_; map; gmap; _⋆)
+open import Relation.Binary.Construct.Closure.ReflexiveTransitive using (ε; _◅_; map; gmap; _⋆)
 open import Data.Sum using ([_,_])
 open import Data.Product using (_,_; ∃; _×_)
-open import Function using (_∘_)
-open import Relation.Binary
-import Relation.Binary.EquivalenceClosure as EqClos
+open import Function using (_∘_; _⇔_; _⟶_)
+open import Relation.Binary hiding (_⇔_)
+import Relation.Binary.Construct.Closure.Equivalence as EqClos
 import Relation.Binary.PropositionalEquality as P
-import Relation.Binary.SymmetricClosure as SymClos
+import Relation.Binary.Construct.Closure.Symmetric as SymClos
 open import Relation.Binary.Reduction
-import Function.Equivalence as Equiv
+open import Function.Properties.Equivalence using (mkEquivalence)
 
 open import Pts.Syntax
 open import Pts.Reduction.Parallel as Par hiding (reduction; _⋄*_; Π-inj)
@@ -164,38 +164,43 @@ module _ {Sort : Set} where
   ⇛⇒→β* : ∀ {n} {a b : Term n} → a ⇛ b → a →β* b
   ⇛⇒→β* refl            = ε
   ⇛⇒→β* (Π {a₁} {a₂} {b₁} {b₂} a₁⇛a₂ b₁⇛b₂) = begin
-    Π a₁ b₁   ⟶⋆⟨ gmap (λ a → Π a _) (λ a₁→a₂ → Π₁ a₁→a₂ _) (⇛⇒→β* a₁⇛a₂) ⟩
-    Π a₂ b₁   ⟶⋆⟨ gmap (Π _) (Π₂ _) (⇛⇒→β* b₁⇛b₂) ⟩
+    Π a₁ b₁   ⟶*⟨ gmap (λ a → Π a _) (λ a₁→a₂ → Π₁ a₁→a₂ _) (⇛⇒→β* a₁⇛a₂) ⟩
+    Π a₂ b₁   ⟶*⟨ gmap (Π _) (Π₂ _) (⇛⇒→β* b₁⇛b₂) ⟩
     Π a₂ b₂   ∎
   ⇛⇒→β* (ƛ {a₁} {a₂} {b₁} {b₂} a₁⇛a₂ b₁⇛b₂) = begin
-    ƛ a₁ b₁   ⟶⋆⟨ gmap (λ a → ƛ a _) (λ a₁→a₂ → ƛ₁ a₁→a₂ _) (⇛⇒→β* a₁⇛a₂) ⟩
-    ƛ a₂ b₁   ⟶⋆⟨ gmap (ƛ _) (ƛ₂ _) (⇛⇒→β* b₁⇛b₂) ⟩
+    ƛ a₁ b₁   ⟶*⟨ gmap (λ a → ƛ a _) (λ a₁→a₂ → ƛ₁ a₁→a₂ _) (⇛⇒→β* a₁⇛a₂) ⟩
+    ƛ a₂ b₁   ⟶*⟨ gmap (ƛ _) (ƛ₂ _) (⇛⇒→β* b₁⇛b₂) ⟩
     ƛ a₂ b₂   ∎
   ⇛⇒→β* (_·_ {a₁} {a₂} {b₁} {b₂} a₁⇛a₂ b₁⇛b₂) = begin
-    a₁ · b₁   ⟶⋆⟨ gmap (λ a → a · _) (λ a₁→a₂ → a₁→a₂ ·₁ _) (⇛⇒→β* a₁⇛a₂) ⟩
-    a₂ · b₁   ⟶⋆⟨ gmap (_·_ _) (_·₂_ _) (⇛⇒→β* b₁⇛b₂) ⟩
+    a₁ · b₁   ⟶*⟨ gmap (λ a → a · _) (λ a₁→a₂ → a₁→a₂ ·₁ _) (⇛⇒→β* a₁⇛a₂) ⟩
+    a₂ · b₁   ⟶*⟨ gmap (_·_ _) (_·₂_ _) (⇛⇒→β* b₁⇛b₂) ⟩
     a₂ · b₂   ∎
   ⇛⇒→β* (cont {a} {b₁} {b₂} {c₁} {c₂} b₁⇛b₂ c₁⇛c₂) = begin
-    (ƛ a b₁) · c₁   ⟶⋆⟨ gmap (λ b → (ƛ _ b) · _)
+    (ƛ a b₁) · c₁   ⟶*⟨ gmap (λ b → (ƛ _ b) · _)
                              (λ b₁→b₂ → (ƛ₂ _ b₁→b₂) ·₁ _) (⇛⇒→β* b₁⇛b₂) ⟩
-    (ƛ a b₂) · c₁   ⟶⋆⟨ gmap (_·_ _) (_·₂_ _) (⇛⇒→β* c₁⇛c₂) ⟩
+    (ƛ a b₂) · c₁   ⟶*⟨ gmap (_·_ _) (_·₂_ _) (⇛⇒→β* c₁⇛c₂) ⟩
     (ƛ a b₂) · c₂   ⟶⟨ cont a b₂ c₂ ⟩
     b₂ [ c₂ ]       ∎
 
   -- Parallel reduction implies β-reduction.
   ⇛*⇒→β* : ∀ {n} {a b : Term n} → a ⇛* b → a →β* b
-  ⇛*⇒→β* a⇛*b = (⇛⇒→β* ⋆) a⇛*b
+  ⇛*⇒→β* = ⇛⇒→β* ⋆
 
   -- Parallel equivalence implies β-equivalence.
   ≡p⇒≡β : ∀ {n} {a b : Term n} → a ≡p b → a ≡β b
-  ≡p⇒≡β a≡b = ([ ⇛⇒≡β , sym ∘ ⇛⇒≡β ] ⋆) a≡b
+  ≡p⇒≡β = fold sym ⇛⇒≡β ⋆
     where
+      open import Relation.Binary.Construct.Closure.Symmetric using (fold)
       open Setoid ≡β-setoid using (sym)
 
       ⇛⇒≡β : ∀ {n} {a b : Term n} → a ⇛ b → a ≡β b
       ⇛⇒≡β = →*⇒↔ reduction ∘ ⇛⇒→β*
 
-  open Equiv using (_⇔_; equivalence)
+  func : ∀ {a} {b} {A : Set a} {B : Set b} → (A → B) → (A ⟶ B)
+  func f = record { to = f ; cong = P.cong f }
+
+  equivalence : ∀ {a b} {A : Set a} {B : Set b} → (A → B) → (B → A) → A ⇔ B
+  equivalence f g = mkEquivalence (func f) (func g)
 
   -- Full β-reduction is equivalent to parallel reduction.
   →β*-⇛*-equivalence : ∀ {n} {a b : Term n} → a →β* b ⇔ a ⇛* b

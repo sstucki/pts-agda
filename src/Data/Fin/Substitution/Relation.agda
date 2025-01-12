@@ -8,11 +8,10 @@ open import Data.Fin using (Fin; zero; suc)
 open import Data.Fin.Substitution
 open import Data.Fin.Substitution.ExtraLemmas
 open import Data.Nat using (ℕ; zero; suc)
-open import Data.Vec.All using (All₂; []; _∷_; lookup₂)
-open import Data.Vec.All.Properties using (gmap₂)
 import Function as Fun
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
-
+open import Data.Vec.Relation.Binary.Pointwise.Inductive using (lookup)
+open import Data.Vec.Relation.Binary.Pointwise.Inductive.Gmap
 
 -- Term relations.
 --
@@ -102,7 +101,7 @@ module _ {T₁ T₂} (_∼_ : TermRel T₁ T₂) where
 
     -- Weakening.
 
-    wk⋆ : ∀ k {n} → S₁.wk⋆ k {n} ⟨ _∼_ ⟩ S₂.wk⋆ k {n}
+    wk⋆ : ∀ k {n} → S₁.wk⋆ {n} k ⟨ _∼_ ⟩ S₂.wk⋆ {n} k
     wk⋆ zero    = id
     wk⋆ (suc k) = gmap₂ weaken (wk⋆ k)
 
@@ -182,7 +181,7 @@ module VarEqSubst where
 
       _/_ : ∀ {m n x₁ x₂} {σ₁ σ₂ : Sub Fin n m} →
             x₁ ≡ x₂ → σ₁ ⟨≡⟩ σ₂ → x₁ V./ σ₁ ≡ x₂ V./ σ₂
-      _/_ {x₁ = x} refl σ₁≡σ₂ = lookup₂ x σ₁≡σ₂
+      _/_ {x₁ = x} refl σ₁≡σ₂ = lookup σ₁≡σ₂ x
 
   open RelSubst subst public
 

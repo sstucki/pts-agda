@@ -9,7 +9,7 @@ open import Data.Fin.Substitution
 open import Data.Fin.Substitution.Lemmas
 open import Data.Fin.Substitution.ExtraLemmas
 open import Data.Fin.Substitution.Typed
-open import Data.Star using (Star; ε; _◅_)
+open import Relation.Binary.Construct.Closure.ReflexiveTransitive using (Star; ε; _◅_; _▻_)
 open import Data.Nat using (ℕ; suc; _+_)
 open import Data.Vec using (lookup)
 open import Relation.Binary.PropositionalEquality as PropEq
@@ -40,14 +40,14 @@ module _ (Sort : Set) where
   -- Substitutions in terms
 
   -- Application of generic substitutions to terms
-  module SubstApp {T} (l : Lift T Term) where
+  module SubstApp {T : ℕ → Set} (l : Lift T Term) where
     open Lift l
 
     infixl 8 _/_
 
     -- Apply a substitution to a term.
     _/_ : ∀ {m n} → Term m → Sub T m n → Term n
-    var x  / σ = lift (lookup x σ)
+    var x  / σ = lift (lookup σ x)
     sort s / σ = sort s
     Π a b  / σ = Π (a / σ) (b / σ ↑)
     ƛ a b  / σ = ƛ (a / σ) (b / σ ↑)

@@ -6,15 +6,15 @@ module Relation.Binary.Reduction where
 
 open import Data.Fin using (Fin)
 open import Data.Fin.Substitution
-open import Data.Star as Star using (Star; ε; _◅_)
-import Data.Star.Properties as StarProp
+open import Relation.Binary.Construct.Closure.ReflexiveTransitive as Star using (Star; ε; _◅_)
+import Relation.Binary.Construct.Closure.ReflexiveTransitive.Properties as StarProp
 open import Data.Nat using (ℕ; _+_)
 open import Function using (_∘_)
 open import Relation.Binary
-open import Relation.Binary.EquivalenceClosure
-open import Relation.Binary.SymmetricClosure using (fwd)
+open import Relation.Binary.Construct.Closure.Equivalence
+open import Relation.Binary.Construct.Closure.Symmetric using (fwd)
 import Relation.Binary.PropositionalEquality as PropEq
-import Relation.Binary.EqReasoning as EqReasoning
+import Relation.Binary.Reasoning.Setoid as EqReasoning
 
 ----------------------------------------------------------------------
 -- Generic reduction and equivalence relations
