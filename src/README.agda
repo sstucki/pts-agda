@@ -13,7 +13,7 @@
 --
 --   https://github.com/agda/agda-stdlib/
 --
--- The code has been tested using Agda 2.5.3 and version 0.14 of the
+-- The code has been tested using Agda 2.7.0.1 and version 2.2 of the
 -- Agda standard library.
 
 
@@ -48,8 +48,8 @@ open import Data.Fin.Substitution.Relation
 open import Data.Fin.Substitution.Typed
 
 -- Symmetric and equivalence closures of binary relations.
-open import Relation.Binary.SymmetricClosure
-open import Relation.Binary.EquivalenceClosure
+open import Relation.Binary.Construct.Closure.Symmetric
+open import Relation.Binary.Construct.Closure.Equivalence
 
 -- Support for generic reduction relations.
 open import Relation.Binary.Reduction

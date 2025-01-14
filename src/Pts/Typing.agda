@@ -11,11 +11,11 @@ open import Data.Fin.Substitution.ExtraLemmas
 open import Data.Fin.Substitution.Typed
 open import Data.Nat using (ℕ; _+_)
 open import Data.Product using (_,_; ∃; _×_; proj₂)
-open import Data.Star using (ε; _◅_)
+open import Relation.Binary.Construct.Closure.ReflexiveTransitive using (ε; _◅_)
 open import Data.Sum using (_⊎_; inj₁; inj₂)
-open import Data.Vec.All using (lookup₂)
 open import Function using (flip)
 open import Relation.Binary
+open import Data.Vec.Relation.Binary.Pointwise.Inductive using () renaming (lookup to lookup₂)
 import Relation.Binary.PropositionalEquality as PropEq
 
 open import Pts.Core public
@@ -174,7 +174,7 @@ module _ {pts} where
     -- Substitutions preserve well-typedness of terms.
     _/_ : ∀ {m n} {Γ : Ctx m} {Δ : Ctx n} {t a σ} →
           Γ ⊢ t ∈ a → Γ ⇒ Δ ⊢ σ → Δ ⊢ t A./ σ ∈ a A./ σ
-    var x Γ-wf            / (σ-wt , _) = lift (lookup₂ x σ-wt)
+    var x Γ-wf            / (σ-wt , _) = lift (lookup₂ σ-wt x)
     axiom a Γ-wf          / (_ , Δ-wf) = axiom a Δ-wf
     Π r a∈s₁ b∈s₂         / σ-wt =
       Π r (a∈s₁ / σ-wt) (b∈s₂ / σ-wt ↑ (_ , a∈s₁ / σ-wt))

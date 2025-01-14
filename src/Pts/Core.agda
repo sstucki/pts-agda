@@ -37,17 +37,4 @@ record PTS : Set₁ where
     _⊢_wf : Wf Term
     Γ ⊢ a wf = ∃ λ s → Γ ⊢ a ∈ sort s
 
-    -- FIXME: the following definition should not be necessary.
-    --
-    -- Instead, it should be sufficient to directly open the module
-    -- WellFormedContext like so:
-    --
-    --   open WellFormedContext _⊢_wf public
-    --
-    -- but there is currently a bug that prevents us from doing so.
-    -- See https://github.com/agda/agda/issues/2901
-
-    _wf : ∀ {n} → Ctx n → Set
-    _wf = WellFormedContext._wf  _⊢_wf
-
-    open WellFormedContext _⊢_wf public hiding (_wf)
+    open WellFormedContext _⊢_wf public
